@@ -12,8 +12,8 @@
         <vue-datepicker-local-calendar v-model="dates[0]"></vue-datepicker-local-calendar>
       </template>
       <div v-if="showButtons" class="datepicker__buttons">
-        <button @click.stop="cancel" class="datepicker__button-cancel">{{this.local.cancelTip}}</button>
-        <button @click.stop="submit" class="datepicker__button-select">{{this.local.submitTip}}</button>
+        <button type="button" @click.stop="cancel" class="datepicker__button-cancel">{{this.local.cancelTip}}</button>
+        <button type="button" @click.stop="submit" class="datepicker__button-select">{{this.local.submitTip}}</button>
       </div>
     </div>
   </transition>
@@ -42,6 +42,10 @@ export default {
     clearable: {
       type: Boolean,
       default: false
+    },
+    closeOnSet: {
+      type: Boolean,
+      default: true
     },
     placeholder: [String],
     disabledDate: {
@@ -119,12 +123,13 @@ export default {
     set () {
       this.$emit('input', this.get())
     },
-    ok () {
+    hide () {
       const $this = this
-      $this.$emit('input', $this.get())
-      !$this.showButtons && setTimeout(() => {
-        $this.show = $this.range
-      })
+      if (this.closeOnSet) {
+        !$this.showButtons && setTimeout(() => {
+          $this.show = $this.range
+        })
+      }
     },
     tf (time, format) {
       const year = time.getFullYear()
